@@ -66,6 +66,11 @@ static data_ptr_t this_realloc(struct pool_strategy *self, data_ptr_t ptr, u64 n
         self->counters.num_bytes_reallocd = nbytes;
         self->counters.num_bytes_allocd += ng5_span(info->bytes_total, nbytes);
 
+        if (nbytes <= info->bytes_total) {
+                info->bytes_used = nbytes;
+                return ptr;
+        }
+
         stored_adr = data_ptr_get_pointer(ptr);
         new_adr = realloc(stored_adr, nbytes);
 
